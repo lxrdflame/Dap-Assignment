@@ -126,7 +126,9 @@ public class PlayerMovement : MonoBehaviour
 
         // If the player presses the jump button, call the 'Jump()' function.
         if (Input.GetButtonDown("Jump") && _jumpCounter < _maxJumps && (_controller.isGrounded || _canDoubleJump))
-            Jump();
+         Jump(); 
+
+       
 
         // Add gravity to the '_velocity' variable.
         _velocity.y += gravity * delta * (Input.GetKey(glideButton) && glideOn && _velocity.y < 0 ? glideMod : 1f);
@@ -137,13 +139,14 @@ public class PlayerMovement : MonoBehaviour
         _velocity = _controller.velocity;
     }
 
+    public Animator animations;
     #region MOVEMENT FUNCTIONS:
     void InitialMovementCalculations(float delta)
     {
         // If the player is pressing the left or right button, call the flip function.
         if (Mathf.Abs(Input.GetAxisRaw("Horizontal")) > 0.0f)
             Flip();
-        // Calculate direction based on player input.
+                // Calculate direction based on player input.
         _direction = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         _direction = _direction.normalized;
 
@@ -164,11 +167,32 @@ public class PlayerMovement : MonoBehaviour
         // to tell which direction we're moving in. Read from velocity
         // rather than input.
         if (_controller.velocity.x < -0.1)
+        {
             _movementDirection = -1;
+            animations.SetInteger("animState", 1);
+
+        }
         else if (_controller.velocity.x > 0.1)
+        {
             _movementDirection = 1;
+            animations.SetInteger("animState", 1);
+
+        }
         else
+        {
             _movementDirection = 0;
+            animations.SetInteger("animState", 0);  
+        }
+        if (_controller.velocity.y > 0.1)
+        {
+            animations.SetInteger("animState", 2);
+        }
+        if (_controller.velocity.y < -1)
+        {
+            animations.SetInteger("animState", 3);
+        }
+        Debug.Log(_controller.velocity.y);
+        
     }
 
     // Finds out what we're standing on, if anything... 
@@ -247,6 +271,7 @@ public class PlayerMovement : MonoBehaviour
                         "is the parent of your sprites to the 'Player GFX' " +
                         "field of the 'PlayerMovement' script to get your " +
                         "sprites to flip!");
+
         }
     }
 
@@ -329,12 +354,16 @@ public class PlayerMovement : MonoBehaviour
             _velocity = new Vector3(jumpHeight * -wallJumpForce,                            //x
                                     Mathf.Sqrt(2f * jumpHeight * -gravity * doubleJumpMod), //y    
                                     0f);                                                    //z
+            animations.SetInteger("animState", 2);
+
         }
         else if (_controller.collisionState.left)
         {
-            _velocity = new Vector3(jumpHeight * wallJumpForce, 
-                                    Mathf.Sqrt(2f * jumpHeight * -gravity * doubleJumpMod), 
+            _velocity = new Vector3(jumpHeight * wallJumpForce,
+                                    Mathf.Sqrt(2f * jumpHeight * -gravity * doubleJumpMod),
                                     0f);
+            animations.SetInteger("animState", 2);
+            
         }
         StartCoroutine(WallJumpWait());
     }
