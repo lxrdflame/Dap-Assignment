@@ -72,7 +72,9 @@ public class PowerUp : MonoBehaviour
             else if (powerUpType == PowerUpType.Health)
             {
                 PlayerHealth _playerHealth = _player.GetComponent<PlayerHealth>();
+                
                 _playerHealth.GainHealth(healthToGive);
+                _playerHealth.HealthText.text = _playerHealth.currentHealth;
             }
 
             // Run some effects if available.

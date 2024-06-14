@@ -20,6 +20,7 @@ public class PlayerShoot : MonoBehaviour
     public float projectileFireRate = 0.5f;
     public KeyCode playerShootButton;
     public LayerMask projectileCollision;
+    public Animator animations;
     #endregion
 
     #region PRIVATE:
@@ -46,13 +47,23 @@ public class PlayerShoot : MonoBehaviour
     {
         if (Input.GetKeyDown(playerShootButton) && _playerMovement.shootOn && _canShoot)
         {
-            Shoot();
+            animations.SetFloat("jumpFallBlend", 1);
+            Debug.Log("Shoots");
+            StartCoroutine (ShootWait());
+            //Shoot();
             StartCoroutine(ProjectileDelay());
+
         }
     }
-
-    void Shoot()
+    IEnumerator ShootWait()
     {
+      
+        yield return new WaitForSeconds(0.2f);
+        Shoot();
+    }
+        void Shoot()
+    {
+    
         // Instantiate a projectile prefab.
         GameObject projectile;
         projectile = Instantiate(projectilePrefab, projectileSpawnPoint.position, Quaternion.identity);
@@ -71,7 +82,10 @@ public class PlayerShoot : MonoBehaviour
     IEnumerator ProjectileDelay()
     {
         _canShoot = false;
+        //yield return new WaitForSeconds(1);
         yield return new WaitForSeconds(projectileFireRate);
         _canShoot = true;
+        animations.SetFloat("jumpFallBlend", 0);
+
     }
 }

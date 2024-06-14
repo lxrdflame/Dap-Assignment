@@ -191,7 +191,7 @@ public class PlayerMovement : MonoBehaviour
         {
             animations.SetInteger("animState", 3);
         }
-        Debug.Log(_controller.velocity.y);
+       // Debug.Log(_controller.velocity.y);
         
     }
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 #region CLASS DESCRIPTION:
@@ -15,6 +16,7 @@ public class PlayerHealth : MonoBehaviour
     [Header("HEALTH:")]
     public int health = 10;
     public string currentHealth;
+    public TextMeshProUGUI HealthText;
     public float invincibilityTime = 0.5f;
     [Header("DEATH:")]
     public KeyCode autoDeathButton;
@@ -33,7 +35,15 @@ public class PlayerHealth : MonoBehaviour
         _currentHealth = health;
         currentHealth = _currentHealth.ToString();
         _playerSprite = transform.Find("Player_GFX/Player_sprite").gameObject;
+        HealthText.text = "5";
+
     }
+
+    /* public void HealthUpdater()
+     {
+         HealthText.text = currentHealth;
+
+     }*/
 
     void Update()
     {
@@ -56,6 +66,8 @@ public class PlayerHealth : MonoBehaviour
             {
                 StartCoroutine(Invincibility());
                 Debug.Log("Invincible :)");
+                HealthText.text = currentHealth;
+
             }
             // Kills the player if their health reaches zero.
             else 
